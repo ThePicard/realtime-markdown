@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Test</title>
+
+    <meta name="viewport" content="width=device-width">
+
+    <link href="https://google-code-prettify.googlecode.com/svn/loader/prettify.css" rel="stylesheet" type="text/css">
+    <!-- pretty but over the top
+    <link href="http://fonts.googleapis.com/css?family=Exo:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+    -->
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Anonymous+Pro" rel="stylesheet" type="text/css">
+    <style>
+        body, #input, #output { margin: 0; padding: 0; border: 0; }
+
+        body { display: flex; display: -webkit-flex; position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+        #input, #output { flex: 1; -webkit-flex: 1; padding: 20px; overflow: auto; }
+
+        #input { resize: none; outline: none; }
+        #output { font-family: "PT Sans", sans; font-size: 11pt; }
+
+        code, #input { font-family: "Anonymous Pro", monospace; font-size: 11pt; }
+    </style>
+</head>
+<body>
+    <textarea id="input">
+Firefox users need the about:config layout.css.flexbox.enabled set to true.
+
+Nothing much on the [Github][1] you won't find with view source. I would have
+made this a gist except this way I can host the demo on Github pages.
+
+Makes use of:
+
+* [marked][2]
+* [prettify][3]
+* seriously trivial JS glue code
+
+Idea inspired by [socrates.io][4], as it turns out it's pretty easy to make the
+markdown part.
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("Github style codeblock notation is supported\n"); // because marked is great
+    return 0;
+}
+
+```
+
+[1]: https://github.com/ThePicard/realtime-markdown
+[2]: https://github.com/chjj/marked
+[3]: https://code.google.com/p/google-code-prettify/
+[4]: http://socrates.io/
+</textarea>
+    <div id="output"></div>
+
+    <script src="https://github.com/chjj/marked/raw/master/lib/marked.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+    <script>
+        (function() {
+            var input = document.getElementById('input');
+            var output = document.getElementById('output');
+
+            function updateOutput() {
+                output.innerHTML = marked(input.value, {langPrefix: 'prettyprint lang-'});
+                prettyPrint();
+            }
+
+            input.addEventListener('input', updateOutput, false);
+
+            input.addEventListener('keydown', function(event) {
+                if (event.keyCode === 9) {
+                    event.preventDefault();
+
+                    var text = input.value;
+                    var cursor = input.selectionStart;
+
+                    input.value = text.substring(0, cursor) + '    ' + text.substring(cursor);
+                    input.setSelectionRange(cursor+4, cursor+4);
+
+                    updateOutput();
+                }
+            }, false);
+
+            updateOutput();
+        })();
+    </script>
+</body>
+</html>
