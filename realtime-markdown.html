@@ -61,15 +61,16 @@ int main() {
 
     <script src="https://github.com/chjj/marked/raw/master/lib/marked.js"></script>
     <script src="https://google-code-prettify.googlecode.com/svn/loader/prettify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
     <script>
         (function() {
             var input = document.getElementById('input');
             var output = document.getElementById('output');
 
-            function updateOutput() {
+            var updateOutput = _.throttle(function() {
                 output.innerHTML = marked(input.value, {langPrefix: 'prettyprint lang-'});
                 prettyPrint();
-            }
+            }, 100);
 
             input.addEventListener('input', updateOutput, false);
 
